@@ -5,7 +5,12 @@ import select
 HOST = '' 
 SOCKET_LIST = []
 RECV_BUFFER = 4096 
-PORT = 9009
+PORT = 9999
+daftar = []
+username = []
+list = []
+index = 0
+
 
 def chat_server():
 
@@ -13,58 +18,83 @@ def chat_server():
     server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     server_socket.bind((HOST, PORT))
     server_socket.listen(10)
- 
+    
+    # add server socket object to the list of readable connections
     SOCKET_LIST.append(server_socket)
  
     print "Chat server started on port " + str(PORT)
  
     while 1:
-
+        # get the list sockets which are ready to be read through select
+        # 4th arg, time_out  = 0 : poll and never block
         ready_to_read,ready_to_write,in_error = select.select(SOCKET_LIST,[],[],0)
-      
+        
         for sock in ready_to_read:
-
+        # a new connection request recieved
             if sock == server_socket: 
                 sockfd, addr = server_socket.accept()
                 SOCKET_LIST.append(sockfd)
+                daftar.append(addr)
+                #print"List :", daftar[]
                 print "Client (%s, %s) connected" % addr
-                 
-                broadcast(server_socket, sockfd, "[%s:%s] entered our chatting room\n" % addr)
+                #print "Isi : ", sockfd
+                #broadcast(server_socket, sockfd, "[%s:%s] entered our chatting room\n" % addr)
              
 
             else:
 
                 try:
 
-                    data = sock.recv(RECV_BUFFER)
-                    if data:
-         
-                        broadcast(server_socket, sock, "\r" + '[' + str(sock.getpeername()) + '] ' + data)  
-                    else:
-                     
-                        if sock in SOCKET_LIST:
-                            SOCKET_LIST.remove(sock)
+                    #data = sock.recv(RECV_BUFFER)
+                    #if data:
+                        data2 = sock.recv(6)
+                        if data2 == 'login ' :
+ 			                username.append(sock.recv(6))
+ 			                list.append(sock)
+ 			                if data2 =='send ' :
+ 			                    data3 = sock.recv(6)
+                                target = list[username.index(data3)]
+                                data4 = sock.recv(RECV_BUFFER)
+                                useractive = daftar.index(sock.getpeername())
+		                	    #print tujuan
+ 		                        target.send("\r" + '['+ str(username[useractive]) +'] ' + data4) 
 
-                        broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr) 
+
+                            if data2 =='active ' :
+ 			                for index in range(len(username)) :
+ 			                    sock.send(username[index])
+			                    sock.send("\n")
+			                    
+			                if data2 =='broad ' :
+ 			                    data4=sock.recv(RECV_BUFFER)
+ 			                    useractive = daftar.index(sock.getpeername())
+ 			                    print useractive
+ 			                    broadcast(server_socket, sock,"\r" + '['+ str(username[useractive]) +'] ' + data4) 
+                            #else:
+                     
+                                #if sock in SOCKET_LIST:
+                                #SOCKET_LIST.remove(sock)
+
+                                #broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr) 
 
       
-                except:
-                    broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr)
-                    continue
+                                except:
+                                    broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr)
+                                    continue
 
-    server_socket.close()
+                                    server_socket.close()
     
-
+# broadcast chat messages to all connected clients
 def broadcast (server_socket, sock, message):
     for socket in SOCKET_LIST:
-
+        # send the message only to peer
         if socket != server_socket and socket != sock :
             try :
                 socket.send(message)
             except :
-       
+                # broken socket connection
                 socket.close()
-
+                # broken socket, remove it
                 if socket in SOCKET_LIST:
                     SOCKET_LIST.remove(socket)
  
