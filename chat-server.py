@@ -50,14 +50,15 @@ def chat_server():
                         data2 = sock.recv(6)
                         if data2 == 'login ' :
  			                username.append(sock.recv(6))
+ 			                if username.count(data1) == 0 :
+					username.append(data1)
  			                list.append(sock)
- 			                if data2 =='send ' :
- 			                    data3 = sock.recv(6)
-                                target = list[username.index(addr)]
-                                data4 = sock.recv(RECV_BUFFER)
-                                useractive = daftar.index(sock.getpeername())
-                                broadcast(server_socket, sockfd, "["+user+"] telah memasuki chat room\n")
- 				sock.send("Login Berhasil\n")
+ 			                user=username[daftar.index(addr)]
+	                  		useractive = daftar.index(sock.getpeername())
+                                	broadcast(server_socket, sockfd, "["+user+"] telah memasuki chat room\n")
+ 					sock.send("Login Berhasil\n")
+ 			else :
+					sock.send("username sudah ada\n")
  				
 			if data2 =='send ' :
  			  data3=sock.recv(6)
@@ -69,7 +70,7 @@ def chat_server():
    			  	useractive=daftar.index(sock.getpeername())
    		          	target.send("\r" + '['+ str(username[useractive]) +'] : ' + data4) 
    		          	
-                            if data2 =='active ' :
+                            if data2 =='active\n' :
                             		sock.send("\rDaftar Pengguna aktif :\n")
  			                for index in range(len(username)) :
  			                    sock.send("\r"+username[index]+ "\n")
