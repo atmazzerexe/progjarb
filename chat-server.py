@@ -59,27 +59,28 @@ def chat_server():
 					sock.send("Login berhasil\n")
 				else :
 					sock.send("Username sudah ada\n")
-				
  				
-			if data2 =='send ' :
- 			  data3=sock.recv(6)
- 			  if username.count(data3) == 0 :
- 			  	sock.send("User tidak ada, silahkan cek lagi lewat command 'active'\n")
- 			  else :  
- 				target = list[username.index(data3)]
- 				data4=sock.recv(RECV_BUFFER)
-   			  	useractive=daftar.index(sock.getpeername())
-   		          	target.send("\r" + '['+ str(username[useractive]) +'] : ' + data4) 
+			if data2 =='kirim ' :
+			  data3=sock.recv(6)
+			  if username.count(data3) == 0 :
+			  	sock.send("User tidak diketahui, silahkan periksa lagi lewat 'whoactive'\n")
+			  else :  
+				tujuan=list[username.index(data3)]
+				data4=sock.recv(RECV_BUFFER)
+  			  	useractive=daftar.index(sock.getpeername())
+  		          	tujuan.send("\r" + '['+ str(username[useractive]) +'] : ' + data4) 
    		          	
-                            if data2 =='active\n' :
-                            		sock.send("\rDaftar Pengguna aktif :\n")
- 			                for index in range(len(username)) :
- 			                    sock.send("\r"+username[index]+ "\n")
-			                    
-			                if data2 =='broad ' :
- 			                    data4=sock.recv(RECV_BUFFER)
- 			                    useractive = daftar.index(sock.getpeername())
- 			                    broadcast(server_socket, sock,"\r" + '['+ str(username[useractive]) +'] ' + data4) 
+			if data2 =='list\n' :
+			  sock.send("\rList User :\n")
+			  for index in range(len(username)) :
+			      sock.send("\r"+username[index]+ "\n")
+			      #sock.send("\n")
+
+                 	if data2 =='broad ' :
+			 data4=sock.recv(RECV_BUFFER)
+			 useractive=daftar.index(sock.getpeername())
+		         broadcast(server_socket, sock,"\r" + '['+ str(username[useractive]) +'] ' + data4)  
+
                             #else:
                      
                                 #if sock in SOCKET_LIST:
@@ -88,11 +89,10 @@ def chat_server():
                                 #broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr) 
 
       
-                                except:
-                                    broadcast(server_socket, sock, "Client (%s, %s) is offline\n" % addr)
-                                    continue
-
-                                    server_socket.close()
+                except:
+                    usermati=daftar.index(sock.getpeername())
+                    broadcast(server_socket, sock, "Client ["+username[usermati]+"] sekarang terputus\n")
+                    continue
     
 # broadcast chat messages to all connected clients
 def broadcast (server_socket, sock, message):
