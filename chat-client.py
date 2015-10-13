@@ -2,7 +2,7 @@ import sys
 import socket
 import select
  
-#def chat_client():
+def chat_client():
     #if(len(sys.argv) < 3) :
         #print 'Usage : python chat_client.py hostname port'
         #sys.exit()
@@ -23,6 +23,11 @@ import select
         sys.exit()
      
     print 'Anda telah berhasil terhubung...'
+    print 'Command :\n'
+    print '1. login\n'
+    print '2. send -> untuk sendto\n'
+    print '3. broad -> untuk broadcast\n'
+    print '4. active -> untuk melihat user aktif\n'
     sys.stdout.write('[Me] '); sys.stdout.flush()
      
     while 1:
@@ -41,13 +46,13 @@ import select
                 else :
                     #print data
                     sys.stdout.write(data)
-                    sys.stdout.write('[Me] '); sys.stdout.flush()     
+                    sys.stdout.write('[Me] : '); sys.stdout.flush()     
             
             else :
                 #user mengirimkan pesan
                 msg = sys.stdin.readline()
                 s.send(msg)
-                sys.stdout.write('[Me] '); sys.stdout.flush() 
+                sys.stdout.write('[Me] : '); sys.stdout.flush() 
 
 if __name__ == "__main__":
 
