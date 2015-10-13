@@ -3,15 +3,9 @@ import socket
 import select
  
 def chat_client():
-    #if(len(sys.argv) < 3) :
-        #print 'Usage : python chat_client.py hostname port'
-        #sys.exit()
-    
     host = 'localhost'
-    port = '9999'
-    #host = sys.argv[1]
-    #port = int(sys.argv[2])
-     
+    port = 9999
+        
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(2)
      
@@ -22,13 +16,13 @@ def chat_client():
         print 'Tidak dapat terhubung'
         sys.exit()
      
-    print 'Anda telah berhasil terhubung...'
+    print 'Anda telah berhasil terhubung... Silahkan mengirim pesan\n'
     print 'Command :\n'
-    print '1. login\n'
-    print '2. send -> untuk sendto\n'
-    print '3. broad -> untuk broadcast\n'
-    print '4. active -> untuk melihat user aktif\n'
-    sys.stdout.write('[Me] '); sys.stdout.flush()
+    print '1. login = untuk masuk menggunakan user\n'
+    print '2. kirim = untuk sendto\n'
+    print '3. broad = untuk broadcast\n'
+    print '4. list = untuk melihat daftar user aktif\n'
+    sys.stdout.write('[Me] : '); sys.stdout.flush()
      
     while 1:
         socket_list = [sys.stdin, s]
@@ -38,16 +32,16 @@ def chat_client():
          
         for sock in ready_to_read:             
             if sock == s:
-                #pesan masuk dari remote server (s)
+                #pesan masuk dari remote server
                 data = sock.recv(4096)
                 if not data :
                     print '\nDisconnected from chat server'
                     sys.exit()
                 else :
-                    #print data
-                    sys.stdout.write(data)
-                    sys.stdout.write('[Me] : '); sys.stdout.flush()     
-            
+                  #print data
+                  sys.stdout.write(data)
+ 		  sys.stdout.write('[Me] : '); sys.stdout.flush()
+             	  
             else :
                 #user mengirimkan pesan
                 msg = sys.stdin.readline()
@@ -57,4 +51,3 @@ def chat_client():
 if __name__ == "__main__":
 
     sys.exit(chat_client())
-
