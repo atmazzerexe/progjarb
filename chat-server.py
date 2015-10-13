@@ -49,7 +49,7 @@ def chat_server():
                     #if data:
                         data2 = sock.recv(6)
                         if data2 == 'login ' :
- 			                username.append(sock.recv(6))
+ 			                data1 = sock.recv(6)
  			                if username.count(data1) == 0 :
 					username.append(data1)
  			                list.append(sock)
