@@ -48,17 +48,18 @@ def chat_server():
                     #data = sock.recv(RECV_BUFFER)
                     #if data:
                         data2 = sock.recv(6)
-                        if data2 == 'login ' :
- 			                data1 = sock.recv(6)
- 			                if username.count(data1) == 0 :
+                      	if data2 =='login ' :
+				data1 =sock.recv(6)
+#				a=sock.getpeername()
+			  	if username.count(data1) == 0 :
 					username.append(data1)
- 			                list.append(sock)
- 			                user=username[daftar.index(addr)]
-	                  		useractive = daftar.index(sock.getpeername())
-                                	broadcast(server_socket, sockfd, "["+user+"] telah memasuki chat room\n")
- 					sock.send("Login Berhasil\n")
- 			else :
-					sock.send("username sudah ada\n")
+			  		list.append(sock)
+					user=username[daftar.index(addr)]
+	                  		broadcast(server_socket, sockfd, "["+user+"] telah memasuki ruang chat\n")
+					sock.send("Login berhasil\n")
+				else :
+					sock.send("Username sudah ada\n")
+				
  				
 			if data2 =='send ' :
  			  data3=sock.recv(6)
