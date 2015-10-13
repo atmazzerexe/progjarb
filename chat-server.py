@@ -53,22 +53,30 @@ def chat_server():
  			                list.append(sock)
  			                if data2 =='send ' :
  			                    data3 = sock.recv(6)
-                                target = list[username.index(data3)]
+                                target = list[username.index(addr)]
                                 data4 = sock.recv(RECV_BUFFER)
                                 useractive = daftar.index(sock.getpeername())
-		                	    #print tujuan
- 		                        target.send("\r" + '['+ str(username[useractive]) +'] ' + data4) 
-
-
+                                broadcast(server_socket, sockfd, "["+user+"] telah memasuki chat room\n")
+ 				sock.send("Login Berhasil\n")
+ 				
+			if data2 =='send ' :
+ 			  data3=sock.recv(6)
+ 			  if username.count(data3) == 0 :
+ 			  	sock.send("User tidak ada, silahkan cek lagi lewat command 'active'\n")
+ 			  else :  
+ 				target = list[username.index(data3)]
+ 				data4=sock.recv(RECV_BUFFER)
+   			  	useractive=daftar.index(sock.getpeername())
+   		          	target.send("\r" + '['+ str(username[useractive]) +'] : ' + data4) 
+   		          	
                             if data2 =='active ' :
+                            		sock.send("\rDaftar Pengguna aktif :\n")
  			                for index in range(len(username)) :
- 			                    sock.send(username[index])
-			                    sock.send("\n")
+ 			                    sock.send("\r"+username[index]+ "\n")
 			                    
 			                if data2 =='broad ' :
  			                    data4=sock.recv(RECV_BUFFER)
  			                    useractive = daftar.index(sock.getpeername())
- 			                    print useractive
  			                    broadcast(server_socket, sock,"\r" + '['+ str(username[useractive]) +'] ' + data4) 
                             #else:
                      
