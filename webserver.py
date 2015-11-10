@@ -18,7 +18,7 @@ while 1:
 
 	if rec:
 		data2 = data2 + rec
-		print data2
+		#print data2 <--- I'm really thankful to this function m(_ _)m
 
 		if(data2.startswith("GET /001 HTTP/1.1")):
 			gambar = open("001.jpg")
