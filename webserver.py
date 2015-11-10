@@ -57,6 +57,6 @@ while 1:
 		
 		else:
         		print "Returning 404"
-        		sockfd.sendall("HTTP/1.0 404 Not Found\r\n")
+        		sockfd.sendall("HTTP/1.0 404 Not Found\r\n\r\n")
 
 	sockfd.close()
